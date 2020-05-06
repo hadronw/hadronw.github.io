@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>Hue的安装与使用 - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>Hue的安装与使用</h2>
+<p>
+    <i>2018-05-24 13:07</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<blockquote>
+<p>hue 3.9</p>
+</blockquote>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Hue是Cloudera开源的一个Hadoop UI，由Cloudera Desktop演化而来。面向用户提供方便的UI用于平时的Hadoop操作中。Apache Ambari面向的是管理员，用于安装、维护集群，而不是使用集群。两者针对的是不同需求</p>
+<a id="more"></a>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><hr>
+<p>hue官方文档：<a href="http://cloudera.github.io/hue/latest/admin-manual/manual.html#installation" target="_blank" rel="noopener">http://cloudera.github.io/hue/latest/admin-manual/manual.html#installation</a></p>
+<p>hue github 仓库地址：<a href="https://github.com/cloudera/hue" target="_blank" rel="noopener">https://github.com/cloudera/hue</a></p>
+<h3 id="Maven-amp-Ant的安装配置"><a href="#Maven-amp-Ant的安装配置" class="headerlink" title="Maven &amp; Ant的安装配置"></a>Maven &amp; Ant的安装配置</h3><p><a href="https://hadronw.github.io/2018/04-22/Linux%E4%B8%AD%E5%AE%89%E8%A3%85Maven-Ant/">Linux中安装Maven &amp; Ant</a></p>
+<h3 id="依赖安装"><a href="#依赖安装" class="headerlink" title="依赖安装"></a>依赖安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ant asciidoc cyrus-sasl-devel cyrus-sasl-gssapi cyrus-sasl-plain gcc gcc-c++ krb5-devel libffi-devel libxml2-devel libxslt-devel make  mysql mysql-devel openldap-devel python-devel sqlite-devel gmp-devel</span><br></pre></td></tr></table></figure>
+<p>注：以上命令可依次安装，Linux可正常连接网络</p>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>hue cdh5版下载<a href="http://archive.cloudera.com/cdh5/cdh/5/" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/</a><br>注：选择下载与自己使用Hadoop 生态包相匹配的包。CDH版的不同版本生态包做过适配处理，减少不同安装包版本冲突。</p>
+<p>将hue-3.9.0-cdh5.10.1.tar.gz 下载到 /opt/soft 目录下 </p>
+<h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><h4 id="解压安装包"><a href="#解压安装包" class="headerlink" title="解压安装包"></a>解压安装包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test soft]# tar zxvf hue-3.9.0-cdh5.10.1.tar.gz -C ..&#x2F;modules</span><br></pre></td></tr></table></figure>
+<p>将解压到/opt/modules 目录下</p>
+<h4 id="编译源码包"><a href="#编译源码包" class="headerlink" title="编译源码包"></a>编译源码包</h4><p>cd /opt/modules/hue-3.9.0-cdh5.10.1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test hue-3.9.0-cdh5.10.1]# make apps</span><br></pre></td></tr></table></figure>
+
+<p>编译会需要一段时间,编译速度取决于网速。此阶段没有出错就表明安装成功</p>
+<p>/opt/modules/zookeeper-3.4.5/bin/zkServer.sh start</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="hue"><a href="#hue" class="headerlink" title="hue"></a>hue</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">secret_key&#x3D;jFE93j;2[290-eiw.KEiwN2s3[&#39;d;&#x2F;.q[eIW^y#e&#x3D;+Iei*@Mn&lt;qW5o</span><br><span class="line">http_host&#x3D;0.0.0.0</span><br><span class="line">http_port&#x3D;8888</span><br><span class="line">server_user&#x3D;root</span><br><span class="line">server_group&#x3D;root</span><br><span class="line">default_user&#x3D;root</span><br><span class="line">default_hdfs_superuser&#x3D;root</span><br></pre></td></tr></table></figure>
+
+<h3 id="hdfs"><a href="#hdfs" class="headerlink" title="hdfs"></a>hdfs</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fs_defaultfs&#x3D;hdfs:&#x2F;&#x2F;master:9000</span><br><span class="line">webhdfs_url&#x3D;http:&#x2F;&#x2F;master:50070&#x2F;webhdfs&#x2F;v1</span><br><span class="line">hadoop_conf_dir&#x3D;&#x2F;home&#x2F;hadoop-2.6.0&#x2F;etc&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+<h3 id="yarn"><a href="#yarn" class="headerlink" title="yarn"></a>yarn</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">resourcemanager_host&#x3D;master</span><br><span class="line">resourcemanager_port&#x3D;8032</span><br><span class="line">resourcemanager_api_url&#x3D;http:&#x2F;&#x2F;master:8088</span><br><span class="line">proxy_api_url&#x3D;http:&#x2F;&#x2F;master:8088</span><br><span class="line">history_server_api_url&#x3D;http:&#x2F;&#x2F;master:19888</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改时区"><a href="#修改时区" class="headerlink" title="修改时区"></a>修改时区</h3><p>hue 的默认时区是American/LosAngeles，需要把timezone修改成Asia/Shanghai</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">time_zone &#x3D; Asia&#x2F;Shanghai</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive_server_host&#x3D;master</span><br><span class="line">hive_server_port&#x3D;10000</span><br><span class="line">hive_conf_dir&#x3D;&#x2F;opt&#x2F;hive-2.0.0&#x2F;conf</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="hbase"><a href="#hbase" class="headerlink" title="hbase"></a>hbase</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hbase_clusters&#x3D;(Cluster|master:9090)</span><br><span class="line">hbase_conf_dir&#x3D;&#x2F;opt&#x2F;hbase-1.2.2&#x2F;conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">build&#x2F;env&#x2F;bin&#x2F;supervisor            &#x2F;&#x2F;启动命令-session关闭后，进程会结束</span><br><span class="line">nohup build&#x2F;env&#x2F;bin&#x2F;supervisor &amp;    &#x2F;&#x2F;后台启动 session关闭后，进程不会结束</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="hue管理页面"><a href="#hue管理页面" class="headerlink" title="hue管理页面"></a>hue管理页面</h3><p>访问地址：<a href="http://master:8888" target="_blank" rel="noopener">http://master:8888</a>  主机名+端口名</p>
+<h3 id="hive使用"><a href="#hive使用" class="headerlink" title="hive使用"></a>hive使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup bin&#x2F;hiveserver2 &amp; &#x2F;&#x2F;启动</span><br></pre></td></tr></table></figure>
+
+<h3 id="hbase的使用"><a href="#hbase的使用" class="headerlink" title="hbase的使用"></a>hbase的使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;start-hbase.sh</span><br><span class="line">bin&#x2F;hbase-daemon.sh start thrift</span><br><span class="line"></span><br><span class="line">bin&#x2F;hbase-daemon.sh stop thrift</span><br><span class="line"></span><br><span class="line">hbase thrift -p 9090</span><br></pre></td></tr></table></figure>
+<p>之后就可以打开hueUI页面进入到hbase中</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><h3 id="缺少hue用户"><a href="#缺少hue用户" class="headerlink" title="缺少hue用户"></a>缺少hue用户</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KeyError: &quot;Couldn&#39;t get user id for user hue&quot; #27</span><br></pre></td></tr></table></figure>
+
+<p>需要创建一个hue用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adduser hue</span><br></pre></td></tr></table></figure>
+
+<h3 id="SecurityException"><a href="#SecurityException" class="headerlink" title="SecurityException"></a>SecurityException</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WebHdfsException: SecurityException: Failed to obtain user group information: org.apache.hadoop.security.authorize.AuthorizationException: User: root is not allowed to impersonate root (error 403)</span><br></pre></td></tr></table></figure>
+
+
+<p>hue没用权限访问hdfs文件管理，hue中的root用户没有hdfs访问权限</p>
+<p>启动hue设置的用户是与hdfs中的用户是区开的，想要有权限可以访问hdfs中需要在Hadoop中的配置文件中添加用户配置。</p>
+<p>在Hadoop中的core-site.xml 中添加hue中的用户</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.root.hosts<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.root.groups<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个用户配置可以添加多个[可以同时配置hue、root、hadoop]，如果hue启动之后设置的默认用户是<code>hue</code>，则把以上代码中的配置<code>root</code> 改成<code>hue</code></p>
+<p>注意一下安装使用的用户，有些问题是用户权限问题导致的</p>
+<p>参考链接：</p>
+<p><a href="https://www.zybuluo.com/BrandonLin/note/456756" target="_blank" rel="noopener">https://www.zybuluo.com/BrandonLin/note/456756</a></p>
+<p><a href="https://blog.csdn.net/m0_37739193/article/details/77963240" target="_blank" rel="noopener">https://blog.csdn.net/m0_37739193/article/details/77963240</a></p>
+<p><a href="https://blog.csdn.net/feinifi/article/details/79418246" target="_blank" rel="noopener">https://blog.csdn.net/feinifi/article/details/79418246</a></p>
+<p><a href="http://www.cnblogs.com/zlslch/p/6819622.html" target="_blank" rel="noopener">http://www.cnblogs.com/zlslch/p/6819622.html</a></p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#hue">hue</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

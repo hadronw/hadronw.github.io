@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>hexo blog 添加分享功能 - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>hexo blog 添加分享功能</h2>
+<p>
+    <i>2018-05-28 11:49</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<p>前几天把hexo博客的主题更换了一下，新换的主题没有集成分享功能，所以手动添加一下。</p>
+<p>此次添加的分享功能为第三方<a href="http://www.mob.com/" target="_blank" rel="noopener">http://www.mob.com/</a>提供的，本着快速的方式，整个功能的添加过程也很简单。时间充裕的情况下，可以尝试自己编写。下文是记录的步骤。</p>
+<a id="more"></a>
+
+<p>主要有两个步骤：</p>
+<ul>
+<li>mob网站应用的创建</li>
+<li>hexo博客中添加ShareSDK的功能</li>
+</ul>
+<h2 id="第一步-——-mob"><a href="#第一步-——-mob" class="headerlink" title="第一步 —— mob"></a>第一步 —— mob</h2><hr>
+<p>先注册mob账号，登陆成功后进入后台管理。 下面文字记录一下操作步骤：</p>
+<ol>
+<li><p>新建应用 <code>如新建hexo应用</code></p>
+</li>
+<li><p>进入hexo应用管理页面 <code>进入新建的hexo应用后台管理页面会有相关功能的添加</code></p>
+</li>
+<li><p>添加ShareSDK功能 <code>添加成功后会出现相关提示</code></p>
+</li>
+<li><p>记录好AppKey  <code>一个应用的Appkey值只有一个，后续的Share功能中会需要用到</code></p>
+</li>
+</ol>
+<p>至此，mob中的账号信息，应用创建完毕。</p>
+<p>参考如下图所示：</p>
+<p><img src="https://hadronw.xyz/blogImgs/2018/05/hexo-addshare-01.png" alt=""></p>
+<p>进入mob官网中的产品文档区，找到web集成文档<a href="http://wiki.mob.com/%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90-13/" target="_blank" rel="noopener">http://wiki.mob.com/%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90-13/</a>。找到快速集成区域，可以看到需要集成的代码。此处将官网的集成代码拷贝了过来，如下所示：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--MOB SHARE BEGIN--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"-mob-share-ui-button -mob-share-open"</span>&gt;</span>分享<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"-mob-share-ui"</span> <span class="attr">style</span>=<span class="string">"display: none"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"-mob-share-list"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"-mob-share-weibo"</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>新浪微博<span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"-mob-share-qzone"</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>QQ空间<span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"-mob-share-qq"</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>QQ好友<span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"-mob-share-douban"</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>豆瓣<span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"-mob-share-facebook"</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>Facebook<span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"-mob-share-twitter"</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>Twitter<span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"-mob-share-close"</span>&gt;</span>取消<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"-mob-share-ui-bg"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">"-mob-share"</span> <span class="attr">src</span>=<span class="string">"http://f1.webshare.mob.com/code/mob-share.js?appkey=你的appkey"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--MOB SHARE END--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>将上面的代码拷贝到博客中的页面，修改成自己设置应用的Appkey值，部署之后即可使用</p>
+<h2 id="第二步-——-hexo博客中添加功能"><a href="#第二步-——-hexo博客中添加功能" class="headerlink" title="第二步 —— hexo博客中添加功能"></a>第二步 —— hexo博客中添加功能</h2><hr>
+<p>上文中已经完成了先期的准备工作，现在开始在hexo博客中添加功能。</p>
+<p>找到hexo博客使用的主题目录，进入<code>layout</code>文件夹，所有页面相关的功能都是在此文件夹下。</p>
+<p><code>_layout.swig</code> 页面是整个hexo博客功能关联的核心。以下简单介绍一下hexo资源相关作用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">一般hexo主题下会存有如下几个文件夹</span><br><span class="line"></span><br><span class="line">languages：用与做多语言适配</span><br><span class="line"></span><br><span class="line">layout：页面功能设计区，主页面功能，菜单栏，页面头部，页面底部，评论，统计等都是添加在此处</span><br><span class="line"></span><br><span class="line">source：资源管理区域，css样式，图片，字体，依赖lib</span><br></pre></td></tr></table></figure>
+
+<p>进过简单的源码梳理，发现只有在主题下的<code>/layout/_layout.swig</code> 文件中<code>&lt;body&gt;&lt;/body&gt;</code>标签中添加快速集成的代码即可。</p>
+<p>注意一下添加的位置，建议放到评论功能的位置之上。参考如下图所示</p>
+<p><img src="https://hadronw.xyz/blogImgs/2018/05/hexo-addshare-00.png" alt=""></p>
+<hr>
+<p>这样简单的添加功能是好了，但却不利于后期的维护。通过查看源码，我们发现主题源码已经做了相关接藕操作。<code>将功能分成不同的部分，然后在_layout.swig页面进行拼装</code> 所以，添加share功能也应该进行相似的处理。</p>
+<p>思路：</p>
+<ul>
+<li>在/layout/_partial文件夹下新建<code>shares.swig</code> 文件</li>
+<li>把快速集成中的代码加入其中</li>
+<li>_layout.swig页面相关位置引用添加的shares.swig文件</li>
+</ul>
+<p>shares.swig 文件参考代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if page.comments and not is_home()  %&#125;</span><br><span class="line">&lt;div class&#x3D;&quot;-mob-share-ui-text -mob-share-open&quot;&gt;分享&lt;&#x2F;div&gt;</span><br><span class="line">&lt;div class&#x3D;&quot;-mob-share-ui -mob-share-ui-theme-slide-bottom&quot; style&#x3D;&quot;display: none&quot;&gt;</span><br><span class="line">    &lt;ul class&#x3D;&quot;-mob-share-list&quot;&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-weibo&quot;&gt;&lt;p&gt;新浪微博&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-weixin&quot;&gt;&lt;p&gt;微信&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-qzone&quot;&gt;&lt;p&gt;QQ空间&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-qq&quot;&gt;&lt;p&gt;QQ好友&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-douban&quot;&gt;&lt;p&gt;豆瓣&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-youdao&quot;&gt;&lt;p&gt;有道云笔记&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-facebook&quot;&gt;&lt;p&gt;Facebook&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">        &lt;li class&#x3D;&quot;-mob-share-twitter&quot;&gt;&lt;p&gt;Twitter&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;</span><br><span class="line">    &lt;&#x2F;ul&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;-mob-share-close&quot;&gt;取消&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">&lt;div class&#x3D;&quot;-mob-share-ui-bg&quot;&gt;&lt;&#x2F;div&gt;</span><br><span class="line">&lt;script id&#x3D;&quot;-mob-share&quot; src&#x3D;&quot;http:&#x2F;&#x2F;f1.webshare.mob.com&#x2F;code&#x2F;mob-share.js?appkey&#x3D;theme.shares.shares-mob&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考代码有所调整，首先增加了功能限制，并不是每一个页面都需要分享功能。上面的处理是评论功能开启，分享功能也同时开启，blog首页中不展示分享功能。可根据实际情况做调整。</p>
+<p>_layout.swig中的引用代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% include &#39;_partial&#x2F;shares.swig&#39; %&#125;  注意存放的页面位置</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Share-SDK相关设置说明"><a href="#Share-SDK相关设置说明" class="headerlink" title="Share SDK相关设置说明"></a>Share SDK相关设置说明</h2><hr>
+<h3 id="支持的平台"><a href="#支持的平台" class="headerlink" title="支持的平台"></a>支持的平台</h3><p>上文中，share功能已经添加成功，这部分是记录一下mob官网中关于shareSDK的一些设置说明。</p>
+<p>支持的分享平台如下所示，本文中的功能并没有完全添加，知道了官方支持的分享平台后，则可以根据实际情况进行调整</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">平台名称   		 ID   </span><br><span class="line"></span><br><span class="line">新浪微博    ——》 weibo  </span><br><span class="line"></span><br><span class="line">微信       ——》 weixin </span><br><span class="line"></span><br><span class="line">QQ空间     ——》 qzone </span><br><span class="line"></span><br><span class="line">QQ好友     ——》 qq </span><br><span class="line"></span><br><span class="line">豆瓣网      ——》 douban </span><br><span class="line"></span><br><span class="line">Faceboo    ——》 facebook </span><br><span class="line"></span><br><span class="line">Twitter    ——》 twitter  </span><br><span class="line"></span><br><span class="line">Pocket     ——》 pocket  </span><br><span class="line"></span><br><span class="line">Google+    ——》 google  </span><br><span class="line"></span><br><span class="line">有道云笔记   ——》 youdao  </span><br><span class="line"></span><br><span class="line">Tumblr     ——》 tumblr  </span><br><span class="line"></span><br><span class="line">Instapap   ——》 instapaper  </span><br><span class="line"></span><br><span class="line">Linkedin   ——》 linkedin</span><br></pre></td></tr></table></figure>
+<h3 id="分享功能弹出的效果"><a href="#分享功能弹出的效果" class="headerlink" title="分享功能弹出的效果"></a>分享功能弹出的效果</h3><hr>
+<p>通过增加-mob-share-ui元素的css类改变弹出效果</p>
+<p>默认效果 -mob-share-ui-theme -mob-share-ui-theme-scatter<br>上边滑出 -mob-share-ui-theme -mob-share-ui-theme-slide-top<br>下边滑出 -mob-share-ui-theme -mob-share-ui-theme-slide-bottom<br>左边滑出 -mob-share-ui-theme -mob-share-ui-theme-slide-left<br>右边滑出 -mob-share-ui-theme -mob-share-ui-theme-slide-right</p>
+<p>修改参考如下，改成了左侧弹出分享功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--MOB SHARE BEGIN--&gt;</span><br><span class="line">&lt;div class&#x3D;&quot;-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left&quot; style&#x3D;&quot;display: none&quot;&gt;</span><br><span class="line">    略...</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>根据实际需求修改样式。</p>
+<p>更多的功能可看官方文档：<a href="http://wiki.mob.com/%E5%88%86%E4%BA%AB%E8%AE%BE%E5%AE%9A/" target="_blank" rel="noopener">分享设定</a></p>
+<p>注：如有遇到问题先自己排查一下，然后再看看官方文档，之后再做调整修改。</p>
+<p>还有其它的第三方分享插件如：<a href="http://share.baidu.com/" target="_blank" rel="noopener">百度分享</a>，具体选择适合自己的,方法大致一样。本文使用的是百度分享。</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#hexo">hexo</a></block><block class="izhengfan-tag"><a href="/archives#blog">blog</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

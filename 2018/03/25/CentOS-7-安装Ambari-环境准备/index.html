@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>CentOS-7-安装Ambari-环境准备 - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>CentOS-7-安装Ambari-环境准备</h2>
+<p>
+    <i>2018-03-25 15:51</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<h2 id="Ambari-是什么"><a href="#Ambari-是什么" class="headerlink" title="Ambari 是什么"></a>Ambari 是什么</h2><hr>
+<p>Ambari跟Hadoop等开源软件一样，也是Apache Software Foundation 中的一个项目，<a id="more"></a> 并且是顶级项目。就Ambari的作用来说，就是创建、管理、监视 Hadoop 的集群，但是这里的Hadoop是广义，指的是Hadoop整个生态圈（例如 Hive，Hbase，Sqoop，Zookeeper 等），而并不仅是特指 Hadoop。用一句话来说，Ambari 就是为了让 Hadoop以及相关的大数据软件更容易使用的一个工具。</p>
+<p>说到这里，大家就应该明白什么人最需要 Ambari了。那些苦苦花费好几天去安装、调试 Hadoop 的初学者是最能体会到 Ambari 的方便之处的。而且，Ambari 现在所支持的平台组件也越来越多，例如流行的 Spark，Storm 等计算框架，以及资源调度平台 YARN 等，我们都能轻松地通过 Ambari 来进行部署。</p>
+<p>Ambari 自身也是一个分布式架构的软件，主要由两部分组成：Ambari Server 和 Ambari Agent。简单来说，用户通过 Ambari Server 通知 Ambari Agent 安装对应的软件；Agent 会定时地发送各个机器每个软件模块的状态给 Ambari Server，最终这些状态信息会呈现在 Ambari 的 GUI，方便用户了解到集群的各种状态，并进行相应的维护。</p>
+<p>目前网上能找到两个发行版：一个是Apache的Ambari，另一个是Hortonworks的，两者区别不大</p>
+<ul>
+<li>Apache的<a href="https://ambari.apache.org/" target="_blank" rel="noopener">Ambari官网</a></li>
+<li>Hortonworks的<a href="https://zh.hortonworks.com/apache/ambari/" target="_blank" rel="noopener">Ambari中文官网</a>，<a href="https://hortonworks.com/apache/ambari/" target="_blank" rel="noopener">Ambari官网</a></li>
+</ul>
+<h2 id="安装前的准备"><a href="#安装前的准备" class="headerlink" title="安装前的准备"></a>安装前的准备</h2><p>大于3台的服务器(虚拟机中的亦可)——最好Linux系统。<br>如：a0，a1，a2，a0为主节点，a1、a2为从节点。主节点的机器配置最好高一些。</p>
+<p>本文假设准备好了3台服务器，都为新安装的CentOS 7系统。</p>
+<p>前期准备：（每个节点机器都需要配置）</p>
+<ul>
+<li>每个节点上配置jdk</li>
+<li>设置主机名</li>
+<li>相互添加IP地址映射，优化DNS</li>
+<li>节点间SSH的无密码登录</li>
+<li>设置网络静态IP（虚拟机中设置是为了防止每次开机ip出现动态变化）</li>
+<li>同步时间NTP</li>
+<li>关闭防火墙、selinux</li>
+<li>关闭transparent_hugepage</li>
+<li>Python版本要大于或等于2.6（CentOS 7内置版本2.7）</li>
+<li>设置最大打开文件数ulimit</li>
+<li>配置umask</li>
+<li>主节点安装mysql/mariadb</li>
+</ul>
+<h3 id="每个节点上配置jdk"><a href="#每个节点上配置jdk" class="headerlink" title="每个节点上配置jdk"></a>每个节点上配置jdk</h3><p>下载好jdk包，解压到服务器中/xxx/xxx 目录，解压后配置好环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;profile</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">export JAVA_HOME&#x3D;&#x2F;xxx&#x2F;xxx&#x2F;xxx</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$JAVA_HOME&#x2F;bin:$PATH</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">保存退出，</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span></pre></td></tr></table></figure>
+
+
+<h3 id="设置主机名，关闭防火墙-关闭SELinux"><a href="#设置主机名，关闭防火墙-关闭SELinux" class="headerlink" title="设置主机名，关闭防火墙,关闭SELinux"></a>设置主机名，关闭防火墙,关闭SELinux</h3><p><a href="https://hadronw.github.io/2018/03-13/CentOS-7%E8%AE%BE%E7%BD%AEhostname%EF%BC%8C%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99/" target="_blank" rel="noopener">CentOS 7设置hostname</a></p>
+<h3 id="相互添加IP地址映射，优化DNS，节点间SSH的无密码登录"><a href="#相互添加IP地址映射，优化DNS，节点间SSH的无密码登录" class="headerlink" title="相互添加IP地址映射，优化DNS，节点间SSH的无密码登录"></a>相互添加IP地址映射，优化DNS，节点间SSH的无密码登录</h3><p><a href="https://hadronw.github.io/2017/12-20/%E5%A4%9A%E4%B8%AALinux%E8%99%9A%E6%8B%9F%E6%9C%BASSH%E5%85%8D%E5%AF%86%E7%A0%81%E9%80%9A%E4%BF%A1%E7%9A%84%E9%85%8D%E7%BD%AE/" target="_blank" rel="noopener">Linux多个虚拟机SSH免密码通信的配置</a></p>
+<h3 id="设置网络静态IP"><a href="#设置网络静态IP" class="headerlink" title="设置网络静态IP"></a>设置网络静态IP</h3><p><a href="https://hadronw.github.io/2017/12-19/Mac%E4%B8%8B%E9%85%8D%E7%BD%AEVM%E4%B8%ADLinux-CentOS6-5%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%99%E6%80%81IP/" target="_blank" rel="noopener">虚拟机网络静态IP</a></p>
+<h3 id="同步时间NTP"><a href="#同步时间NTP" class="headerlink" title="同步时间NTP"></a>同步时间NTP</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">yum install ntp</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">systemctl is-enabled ntpd</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">systemctl enable ntpd</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">systemctl start ntpd</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">ntpdate time1.aliyun.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">crontab e</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"> 30 02 * * *  ntpdate time1.aliyun.com</span></pre></td></tr></table></figure>
+
+<h3 id="关闭transparent-hugepage"><a href="#关闭transparent-hugepage" class="headerlink" title="关闭transparent_hugepage"></a>关闭transparent_hugepage</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">查看transparent_hugepage状态</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">cat &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;defrag</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">[always] madvise never  # 表示开启</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cat &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;enabled</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">[always] madvise never  # 表示开启</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;rc.d&#x2F;rc.local  #在文末添加</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">if test -f &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;enabled; then</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"> echo never &gt; &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;enabled</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"> fi</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"> if test -f &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;defrag; then</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"> echo never &gt; &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;defrag</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">fi</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">保存后退出chmod +x &#x2F;etc&#x2F;rc.d&#x2F;rc.local  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">赋予chmod +x &#x2F;etc&#x2F;rc.d&#x2F;rc.local文件执行权限</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">重启系统再查看状态</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">cat &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;defrag</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">always madvise [never]  # 表示关闭</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">cat &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;enabled</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">always madvise [never]  # 表示关闭</span></pre></td></tr></table></figure>
+
+
+<h3 id="设置最大打开文件数ulimit"><a href="#设置最大打开文件数ulimit" class="headerlink" title="设置最大打开文件数ulimit"></a>设置最大打开文件数ulimit</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ulimit -Sn</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">ulimit -Hn # 如果最大数小于10000 则重设</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ulimit -n 10000</span></pre></td></tr></table></figure>
+
+<h3 id="配置umask"><a href="#配置umask" class="headerlink" title="配置umask"></a>配置umask</h3><p>UMASK (用户掩码或用户文件创建掩码) 设置在 Linux 计算机上创建新文件或文件夹时授予的默认权限或基本权限。大多数 Linux 发行将022设置为默认的 umask 值。umask 值022授予对新文件或文件夹的读取、写入、执行权限755。umask 值027授予对新文件或文件夹的读取、写入、执行权限750<br>umaks # 如果不是0022，则执行以下语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">echo umask 0022 &gt;&gt; &#x2F;etc&#x2F;profile</span></pre></td></tr></table></figure>
+
+<h3 id="主节点安装mysql-mariadb"><a href="#主节点安装mysql-mariadb" class="headerlink" title="主节点安装mysql/mariadb"></a>主节点安装mysql/mariadb</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">yum install mariadb-server</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">yum install mysql-connector-java # 安装jdbc驱动</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">systemctl start mariadb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">systemctl enable mariadb  #启动</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">mysql_secure_installation  # 数据库初始化设置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">#首先是设置密码，会提示先输入密码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">Enter current password for root (enter for none):&lt;–初次运行直接回车</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">#设置密码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">Set root password? [Y&#x2F;n] &lt;– 是否设置root用户密码，输入y并回车或直接回车</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">New password: &lt;– 设置root用户的密码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">Re-enter new password: &lt;– 再输入一次你设置的密码</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">#其他配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">Remove anonymous users? [Y&#x2F;n] &lt;– 是否删除匿名用户，回车</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">Disallow root login remotely? [Y&#x2F;n] &lt;–是否禁止root远程登录,回车,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">Remove test database and access to it? [Y&#x2F;n] &lt;– 是否删除test数据库，回车</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">Reload privilege tables now? [Y&#x2F;n] &lt;– 是否重新加载权限表，回车</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">#初始化MariaDB完成，接下来测试登录，输入密码能正常登陆就完成了</span></pre></td></tr></table></figure>
+
+<p>创建ambari数据库，用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">mysql -uroot -p  #连接数据库</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">mysql&gt; create database ambari character set utf8 ;  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE USER &#39;ambari&#39;@&#39;%&#39;IDENTIFIED BY &#39;123456&#39;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;ambari&#39;@&#39;%&#39;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">mysql&gt; FLUSH PRIVILEGES;</span></pre></td></tr></table></figure>
+
+<p>如果要安装Hive，再创建Hive数据库和用户 再执行下面的语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">mysql&gt; create database hive character set utf8 ;  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE USER &#39;hive&#39;@&#39;%&#39;IDENTIFIED BY &#39;123456&#39;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;hive&#39;@&#39;%&#39;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">mysql&gt; FLUSH PRIVILEGES;</span></pre></td></tr></table></figure>
+
+<p>至此，Ambari的准备工作就完成了</p>
+<p>注：如果要在云上面搭建，一定要选择相同的地区，地域打击。主从节点在同一个地区！否则会出现IP连接上的错误</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#Linux">Linux</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

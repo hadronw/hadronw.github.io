@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>Linux多个虚拟机SSH免密码通信的配置 - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>Linux多个虚拟机SSH免密码通信的配置</h2>
+<p>
+    <i>2017-12-20 05:25</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<p>先假设有3个Linux虚拟机，分别命名为：master、slave1、slave2(方便区分)。并且都已经配置好了静态IP，设置好了hostname<a href="https://www.hadronw.github.io/2017/12/19/Mac%E4%B8%8B%E9%85%8D%E7%BD%AEVM%E4%B8%ADLinux-CentOS6-5%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%99%E6%80%81IP/" target="_blank" rel="noopener">没有配置好的点击此处</a></p>
+<h2 id="IP地址与主机名映射，多个虚拟机相互映射"><a href="#IP地址与主机名映射，多个虚拟机相互映射" class="headerlink" title="IP地址与主机名映射，多个虚拟机相互映射"></a>IP地址与主机名映射，多个虚拟机相互映射</h2><a id="more"></a>
+<p>[root@master ~]# vi /etc/hosts</p>
+<h3 id="IP地址与主机名映射"><a href="#IP地址与主机名映射" class="headerlink" title="IP地址与主机名映射"></a>IP地址与主机名映射</h3><p>先设置master机器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# vi &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
+
+<p>如图：</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/100.jpg" alt=""></p>
+<p>slave1、slave2同上</p>
+<h3 id="多个Linux虚拟机相互映射"><a href="#多个Linux虚拟机相互映射" class="headerlink" title="多个Linux虚拟机相互映射"></a>多个Linux虚拟机相互映射</h3><p>先编辑master，将slave1、slave2中配置的映射填写到master机器中的hosts文件，后再将master机器hosts分别拷贝到slave1、slave2机器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# vi &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
+
+<p>配置结果如图：</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/101.jpg" alt=""></p>
+<p>配置slave1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@slave1 ~]# vi &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
+
+<p>配置结果如图：</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/102.jpg" alt=""></p>
+<p>配置slave2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@slave2 ~]# vi &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
+
+<p>配置结果如图：</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/103.jpg" alt=""></p>
+<h2 id="禁用防火墙"><a href="#禁用防火墙" class="headerlink" title="禁用防火墙"></a>禁用防火墙</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;etc&#x2F;init.d&#x2F;iptables stop   ---关闭</span><br><span class="line">chkconfig iptables off  ---关闭防火墙自动运行</span><br><span class="line">&#x2F;etc&#x2F;init.d&#x2F;iptables status     ---查看状态</span><br><span class="line"></span><br><span class="line">setenforce 0</span><br><span class="line">getenforce 查看是否关闭了</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service iptables stop   ---关闭</span><br><span class="line">chkconfig iptables off  ---关闭防火墙自动运行</span><br><span class="line">service iptables status     ---查看状态</span><br><span class="line">chkconfig --list | grep iptables ---验证</span><br></pre></td></tr></table></figure>
+
+<p>master机器关闭如下：</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/104.jpg" alt=""></p>
+<p>slave1、slave2操作同上</p>
+<h2 id="多个虚拟机SSH免密码通信的配置"><a href="#多个虚拟机SSH免密码通信的配置" class="headerlink" title="多个虚拟机SSH免密码通信的配置"></a>多个虚拟机SSH免密码通信的配置</h2><h3 id="每台机器先生成ssh密钥"><a href="#每台机器先生成ssh密钥" class="headerlink" title="每台机器先生成ssh密钥"></a>每台机器先生成ssh密钥</h3><p>master机器，先切换了常用的用户Hadoop2，root账号平时不用；所以生成的SSH免密通信也是在hadoop2账号下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hadoop2@master ~]$ mkdir .ssh</span><br><span class="line">[hadoop2@master ~]$ ssh-keygen -t rsa</span><br><span class="line"> (&#x2F;home&#x2F;hadoop&#x2F;.ssh&#x2F;id_rsa): (Enter键)</span><br><span class="line">Enter passphrase (empty for no passphrase): (Enter键)</span><br><span class="line">Enter same passphrase again: (Enter键)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/105.jpg" alt="成功生成"></p>
+<p>将id_rsa.pub的密钥拷贝到authorized_keys文件中；后续要做的内容也是将其他机器id_rsa.pub拷贝到authorized_keys授权密钥中，当每个机器中都相互存好了密钥，ssh登陆时也就无需输入密码了</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/106.jpg" alt=""></p>
+<p>注：有些虚拟机无法使用ssh命令，则需要安装openssh-clients插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# yum -y install openssh-clients</span><br></pre></td></tr></table></figure>
+<p>slave1、slave2机器同上</p>
+<h3 id="相互拷贝id-rsa-pub"><a href="#相互拷贝id-rsa-pub" class="headerlink" title="相互拷贝id_rsa.pub"></a>相互拷贝id_rsa.pub</h3><p>相互拷贝id_rsa.pub确保每一台机器中authorized_keys都有各自密钥</p>
+<p>先将slave1中的id_rsa拷贝到master中authorized_keys</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop2@slave1 .ssh]$ cat id_rsa.pub | ssh hadoop2@master &#39;cat &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys&#39;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/107.jpg" alt="拷贝成功"></p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/108.jpg" alt="在master机器中检验"></p>
+<p>slave2机器需要如同slave1中同样的操作。此时master机器authorized_keys便有了所有机器的id_rsa.pub</p>
+<p>或者（此方法的优点是简化了拷贝命令）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">在每个机器中生成id_rsa.pub后，master、slave1、slave2</span><br><span class="line"></span><br><span class="line">在master机器中运行</span><br><span class="line"></span><br><span class="line">ssh-copy-id slave1</span><br><span class="line">ssh-copy-id slave2</span><br><span class="line"></span><br><span class="line">slave1 </span><br><span class="line">ssh-copy-id slave2</span><br><span class="line">ssh-copy-id master</span><br><span class="line">……</span><br><span class="line"></span><br><span class="line">让该机器中的authorized_keys存储需要免密链接的机器id_rsa.pub；执行完毕之后可以直接验证免密登陆</span><br></pre></td></tr></table></figure>
+
+<h3 id="将master中的authorized-keys分发到其他机器"><a href="#将master中的authorized-keys分发到其他机器" class="headerlink" title="将master中的authorized_keys分发到其他机器"></a>将master中的authorized_keys分发到其他机器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop2@master .ssh]$ scp -r authorized_keys hadoop2@slave1:~&#x2F;.ssh&#x2F;</span><br><span class="line">[hadoop2@master .ssh]$ scp -r authorized_keys hadoop2@slave2:~&#x2F;.ssh&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/109.jpg" alt="传送成功"></p>
+<h3 id="验证是否可以免密码通信"><a href="#验证是否可以免密码通信" class="headerlink" title="验证是否可以免密码通信"></a>验证是否可以免密码通信</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop2@master .ssh]$ ssh slave1  -- ssh 加配置的主机名</span><br><span class="line">在其他机器中也可以验证</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/110.jpg" alt="验证成功"></p>
+<p>注：连接成功后，如需退出通信，则输入exit</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#Linux">Linux</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

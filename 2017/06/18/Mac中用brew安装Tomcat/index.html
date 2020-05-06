@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>Mac中用brew安装Tomcat - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>Mac中用brew安装Tomcat</h2>
+<p>
+    <i>2017-06-18 12:22</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<blockquote>
+<p>Tomcat的安装方式有多种，官网下载安装或用其他管理工具安装；本篇内容是用brew软件管理工具安装Tomcat</p>
+</blockquote>
+<h2 id="首先先确认brew命令正常"><a href="#首先先确认brew命令正常" class="headerlink" title="首先先确认brew命令正常"></a>首先先确认brew命令正常</h2><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">brew list 查看已安装软件</span></pre></td></tr></table></figure>
+
+<p>如果命令无法正常运行可参照<a href="https://hadronw.github.io/2017/06/14/Mac%E7%9A%84%E4%B8%80%E4%BA%9B%E9%85%8D%E7%BD%AE%E4%B9%8Biterm2%E7%AF%87/" target="_blank" rel="noopener">此文安装brew</a></p>
+<h2 id="查看Tomcat相关信息"><a href="#查看Tomcat相关信息" class="headerlink" title="查看Tomcat相关信息"></a>查看Tomcat相关信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">brew info tomcat</span></pre></td></tr></table></figure>
+
+
+<h2 id="安装Tomcat"><a href="#安装Tomcat" class="headerlink" title="安装Tomcat"></a>安装Tomcat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">brew install tomcat</span></pre></td></tr></table></figure>
+
+
+
+<h2 id="检查是否安装成功"><a href="#检查是否安装成功" class="headerlink" title="检查是否安装成功"></a>检查是否安装成功</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">catalina -h</span></pre></td></tr></table></figure>
+
+<p>catalina代表Tomcat的服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">catalina  查看帮助命令</span></pre></td></tr></table></figure>
+
+<p>Tomcat的默认端口是8080，如果运行成功可通过<a href="http://localhost:8080" target="_blank" rel="noopener"><code>http://localhost:8080</code></a>访问</p>
+<p>webapp的根目录(CATALINA_HOME)</p>
+<p> <code>/usr/local/Cellar/tomcat/8.5.16/libexec/webapps/ROOT/</code></p>
+<p></p>
+<h2 id="运行Tomcat"><a href="#运行Tomcat" class="headerlink" title="运行Tomcat"></a>运行Tomcat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">catalina run</span></pre></td></tr></table></figure>
+
+<p>停止Ctrl＋C</p>
+<h2 id="开启服务"><a href="#开启服务" class="headerlink" title="开启服务"></a>开启服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">catalina start</span></pre></td></tr></table></figure>
+
+
+<h2 id="停止服务"><a href="#停止服务" class="headerlink" title="停止服务"></a>停止服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">catalina stop</span></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#Tomcat">Tomcat</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

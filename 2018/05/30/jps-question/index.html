@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>Jps无法查看运行程序进程 - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>Jps无法查看运行程序进程</h2>
+<p>
+    <i>2018-05-30 11:49</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<blockquote>
+<p>出现情况：程序正常运行后,jps使用也正常，间隔一段时间后jps无法查看Java相关进程了</p>
+</blockquote>
+<h2 id="jps简介"><a href="#jps简介" class="headerlink" title="jps简介"></a>jps简介</h2><hr>
+<p>先了解一下jps是什么？</p>
+<a id="more"></a>
+
+<p>jps：Java Virtual Machine Process Status Tool 用于查看本机Java相关进程的pid。</p>
+<p>相关用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">选项 </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">-q 仅输出VM标识符，不包括class name,jar name,arguments in main method </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">-m 输出main method的参数 </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">-l 输出完全的包名，应用主类名，jar的完全路径名 </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">-v 输出jvm参数 </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">-V 输出通过flag文件传递到JVM中的参数(.hotspotrc文件或-XX:Flags&#x3D;所指定的文件 </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">-Joption 传递参数到vm,例如:-J-Xms48m</span></pre></td></tr></table></figure>
+
+<p>Linux中配置好Java的环境变量后，即可使用jps命令查看Java相关进程，上文所列举的是配套使用的参数。</p>
+<p>在使用过程中，有可能会出现jps查看不了Java进程的情况。程序在运行，jps命令却看不到相关程序的进程。但用Linux的<code>ps -aux</code>相关命令却可以看到，问题出在哪里呢？</p>
+<p>详细介绍可以看该文：<a href="http://trinea.iteye.com/blog/1196400" target="_blank" rel="noopener">http://trinea.iteye.com/blog/1196400</a></p>
+<h2 id="问题梳理"><a href="#问题梳理" class="headerlink" title="问题梳理"></a>问题梳理</h2><hr>
+<p>其实上述的文章已经指明了，小编在阅读的时候却没有过多的注意，导致在解决这个问题时走了不少弯路。</p>
+<p>原因是：程序启动正常，运行正常，使用jps查看也是正常的。却在间隔了几分钟或者十几分钟之后，jps无法查看进程了。</p>
+<p>发现了上述情况后，小编的第一反应，是不是系统相关的问题，而不是<code>是不是程序配置出现了相关问题</code>。</p>
+<p>因为此次出现的情况发生在新使用的腾讯云服务器中，而程序的配置是与之前阿里云上的配置一样的。同样的配置方式阿里云正常，腾讯云中就出问题了，所以没有怀疑相同的配置情况是否适合腾讯云上。</p>
+<p>首先分析一下jps查看进程的方式：</p>
+<p>Java程序启动后，会默认在系统的根目录下的/tmp文件夹中创建一个含当前用户名的<code>hsperfdata_userName</code>文件夹，同时在该文件夹中会创建以Java相关进程id为为文件名的文件。并在相对应的文件中存储jvm运行的相关信息。</p>
+<p>jps就是读取<code>hsperfdata_userName</code>文件夹中文件的信息，并把读取到的信息输出到控制台展示。</p>
+<p>重点：<strong>如果根目录下的/tmp文件被删除，或者说/tmp中的hsperfdata_userName文件夹被删除</strong>，那jps命令是查看不了Java相关程序的进程的。</p>
+<p>因此，出现jps无法查看已经启动了的相关Java进程的原因就是<code>/tmp</code>文件夹中的<code>hsperfdata_userName</code>被删除，或者无访问权限。 </p>
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><hr>
+<p>如果有遇到相关问题，第一时间查看根目录下<code>/tmp</code>文件夹中的信息。</p>
+<p>原因找到了，那为什么会出现<code>/tmp</code>中的信息被删除呢？</p>
+<ul>
+<li>启动的某个程序出现问题，把<code>/tmp</code>中的信息全部删除</li>
+<li>Linux系统自带的清除机制</li>
+<li><code>/tmp</code>中的磁盘满了，无法存储数据</li>
+</ul>
+<p>针对可能出现的问题一一排查。</p>
+<h3 id="启动的某个程序出现了问题"><a href="#启动的某个程序出现了问题" class="headerlink" title="启动的某个程序出现了问题"></a>启动的某个程序出现了问题</h3><p>将程序关闭，或者重新启动一下Linux机器，在不启动任何程序的情况下，<code>/tmp</code>目录中存放一些文件。隔一段时间再看看是否还存在。</p>
+<h3 id="Linux系统自带的清除机制"><a href="#Linux系统自带的清除机制" class="headerlink" title="Linux系统自带的清除机制"></a>Linux系统自带的清除机制</h3><p>Linux作为服务器，通常来说启动之后是很少会关闭的。根目录下<code>/tmp</code>文件作为临时缓存存放的路径，在长时间的使用过程中是会不断的产生新文件。为了保证Linux的正常运行，同时又避免<code>/tmp</code>文件夹无限的增加导致硬盘无法存放。</p>
+<p>Linux针对这中情况，做了一些定时清理的处理的设置。常用的可能定时删除临时目录的工具为crontab、redhat的tmpwatch、ubuntu的tmpreaper等等。通常会在<code>/etc/</code>目录下，可以看到类似<code>cron.daily,cron.hourly,cron.monthly</code>等文件夹，它们就是用来执行相关定时任务的。说明仅供参考，上文描述情况基于<code>centOS6.5</code>。</p>
+<p>注：不同的Linux版本存放位置会不一样，命名方式也会有差别，管理的入口也会不也一样，设计的原理确实一样的。可以根据详细的系统版本去查找，</p>
+<h3 id="tmp中的磁盘满了，无法存储数据"><a href="#tmp中的磁盘满了，无法存储数据" class="headerlink" title="/tmp中的磁盘满了，无法存储数据"></a><code>/tmp</code>中的磁盘满了，无法存储数据</h3><p>用命令查看磁盘使用情况，<code>free、du -h</code> 等，发现还有很大的磁盘空间，排除了这种情况。</p>
+<p>进过排查，发现是自己程序问题导致的，最后在使用另一种配置方式后，程序成功的运行在了腾讯云上。ps:在面对问题的时候，怀疑自己出错可能也是一种解决方式。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><hr>
+<p>通常来说，遇到了问题，就是看到了进步的方向。解决问题的过程中，就是在不断的进步。</p>
+<p>经验丰富的对应面就是，遇到了非常多的问题。当你把遇到的问题处理掉了，并且可以好好的终结，你的经验也就丰富起来了。</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#Linux">Linux</a></block><block class="izhengfan-tag"><a href="/archives#Java">Java</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

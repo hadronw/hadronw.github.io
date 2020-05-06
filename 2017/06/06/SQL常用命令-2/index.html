@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>SQL常用命令(2) - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>SQL常用命令(2)</h2>
+<p>
+    <i>2017-06-06 07:33</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ul>
+<li>SELECT 是您每次要从数据库查询信息时使用的子句。</li>
+<li>WHERE 是一个流行的命令，可以根据您指定的条件过滤查询的结果。</li>
+<li>LIKE并且BETWEEN是可以在一个WHERE子句中使用的特殊操作符</li>
+<li>AND并且OR是可以用于WHERE在两个或多个条件下过滤查询的特殊操作符。</li>
+<li>ORDER BY 允许您以升序或降序对查询的结果进行排序。</li>
+<li>LIMIT允许您指定查询将返回的最大行数。这对于具有数千甚至数百万行的大型表格尤其重要。</li>
+</ul>
+<h2 id="在表格中添加新列"><a href="#在表格中添加新列" class="headerlink" title="在表格中添加新列"></a>在表格中添加新列</h2><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ALTER TABLE celebs ADD COLUME twitter_handle text;</span></pre></td></tr></table></figure>
+
+<p>该ALTER TABLE语句向表中添加了一个新列。当您要向表中添加列时，可以使用此命令。</p>
+<ol>
+<li>ALTER TABLE是一个允许您进行指定更改的子句。</li>
+<li>celebs是正在更改的表的名称。</li>
+<li>ADD COLUMN是一个允许您向表添加新列的子句。</li>
+</ol>
+<p>twitter_handle 是要添加的新列的名称<br>TEXT 是新列的数据类型</p>
+<h2 id="高级查询"><a href="#高级查询" class="headerlink" title="高级查询"></a>高级查询</h2><h3 id="查询-DISTINCT"><a href="#查询-DISTINCT" class="headerlink" title="查询(DISTINCT)"></a>查询(DISTINCT)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT DISTINCT genre FROM movies;</span></pre></td></tr></table></figure>
+
+<p>SELECT DISTINCT用于返回结果集中的唯一值。它会滤除所有重复的值。在这里，结果集列出了movies表中的每个类型一次。</p>
+<ol>
+<li><p>SELECT DISTINCT指定该语句将是一个返回指定列中唯一值的查询</p>
+</li>
+<li><p>genre是要在结果集中显示的列的名称。</p>
+</li>
+<li><p>FROM movies表示要查询的表名。</p>
+</li>
+</ol>
+<h3 id="过滤查询"><a href="#过滤查询" class="headerlink" title="过滤查询"></a>过滤查询</h3><p>过滤查询的结果是SQL中的一个重要技能。在数据被过滤之后，电影可以看到不同的可能类型更容易，而不是扫描表中的每一行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies WHERE imdb_rating &gt; 8;</span></pre></td></tr></table></figure>
+<p>此语句将结果集过滤到仅包含IMDb等级大于8的电影。它如何工作？</p>
+<ol>
+<li><p>WHERE是一个子句，表示您要过滤结果集以仅包含以下条件为真的行。</p>
+</li>
+<li><p>imdb_rating &gt; 8是过滤结果集的条件。这里，只有列中值大于8的imdb_rating行才会返回到结果集中。</p>
+</li>
+<li><p>运算符创建一个可以被评估为true或false的条件。与该WHERE子句一起使用的常用运算符是：</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#x3D; 等于</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">!&#x3D; 不等于</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&gt; 大于</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&lt; 少于</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&gt;&#x3D; 大于或等于</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">&lt;&#x3D; 小于或等于</span></pre></td></tr></table></figure>
+
+<h3 id="查询-LIKE"><a href="#查询-LIKE" class="headerlink" title="查询(LIKE)"></a>查询(LIKE)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies HERE name LIKE &#39;Se_en&#39;;</span></pre></td></tr></table></figure>
+<p>LIKE当你想比较类似的值时，可以是一个有用的操作符。在这里，我们正在比较两部名称相同但拼写不一的电影。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">1. LIKE是与WHERE子句一起使用的特殊操作符，用于搜索列中的特定模式。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">2. name LIKE Se_en是评估name特定模式的列的条件。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">3. Se_en表示具有通配符的模式。这种_方式可以在这里替代任何个人的角色，而不会破坏模式。名称Seven和Se7en两者匹配这种模式。</span></pre></td></tr></table></figure>
+
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询(%)"></a>查询(%)</h3><p>%是可以使用的另一个通配符LIKE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies WHERE name LIKE &#39;A%&#39;;</span></pre></td></tr></table></figure>
+<p>% 是一个通配符，在该模式中匹配零个或多个缺失的字母。<br>A% 匹配所有电影，其名称以“A”开头<br>%a 匹配以“a”结尾的所有电影<br>%a% 匹配所有中间包含‘a’的电影</p>
+<h3 id="查询-BETWEEN"><a href="#查询-BETWEEN" class="headerlink" title="查询(BETWEEN)"></a>查询(BETWEEN)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies WHERE name BETWEEN &#39;A&#39;and &#39;J&#39;;</span></pre></td></tr></table></figure>
+<p>此语句将结果集过滤到仅包含以name“A”字母开头但不包括“J”的s的电影。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies WHERE year BETWEEN 1990 AND 2000;</span></pre></td></tr></table></figure>
+
+<p>在这个陈述中，BETWEEN运营商被用来过滤结果集，只包括year1990年至2000年之间的电影。</p>
+<h3 id="查询-AND"><a href="#查询-AND" class="headerlink" title="查询(AND)"></a>查询(AND)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies WHERE year BETWEEN 1990 and 2000 AND genre &#x3D; &#39;comedy&#39;;</span></pre></td></tr></table></figure>
+<p>有时你想在一个WHERE子句中组合多个条件，使结果集更加具体和有用。这样做的一个方法是使用AND操作符。</p>
+<ol>
+<li><p>year BETWEEN 1990 and 2000是该WHERE条款的第一个条件。</p>
+</li>
+<li><p>AND genre = ‘comedy’是该WHERE条款中的第二个条件。</p>
+</li>
+<li><p>AND是组合两个条件的运算符。对于要包含在结果集中的行，两个条件都必须为true。在这里，我们使用AND操作员只返回1990年至2000年期间也是喜剧的电影。</p>
+</li>
+</ol>
+<h3 id="查询-OR"><a href="#查询-OR" class="headerlink" title="查询(OR)"></a>查询(OR)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies WHERE genre &#x3D; &#39;comedy&#39; OR year &lt; 1980;</span></pre></td></tr></table></figure>
+<p>该OR运营商还可以使用一个以上条件的组合中的WHERE条款。所述OR操作者将分别评估每个条件，并且如果任何一个条件都为真，则该行被添加到结果集。</p>
+<ol>
+<li><p>WHERE genre = ‘comedy’是该WHERE条款的第一个条件。</p>
+</li>
+<li><p>OR year &lt; 1980是该WHERE条款中的第二个条件。</p>
+</li>
+<li><p>OR是将结果集过滤到仅包含条件为真的行的操作符。在这里，我们回来有一种喜剧类型的电影或1980年以前发行的电影。</p>
+</li>
+</ol>
+<h3 id="查询-ORDER-BY-DESC-ASC"><a href="#查询-ORDER-BY-DESC-ASC" class="headerlink" title="查询(ORDER BY, DESC, ASC)"></a>查询(ORDER BY, DESC, ASC)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies ORDER BY imdb_rating DESC;</span></pre></td></tr></table></figure>
+
+<p>您可以使用查询结果排序ORDER BY。对结果进行排序通常会使数据更有用和更易于分析。</p>
+<ol>
+<li><p>ORDER BY是一个子句，表示您想按字母顺序或数字排列特定列的结果集。</p>
+</li>
+<li><p>imdb_rating是要排序的列的名称。</p>
+</li>
+<li><p>DESC是SQL中的一个关键字，用于ORDER BY按照降序（从高到低或ZA）排序结果。在这里，它按照IMDb评级将所有电影从最高到最低。</p>
+</li>
+</ol>
+<p>也可以按升序对结果进行排序。ASC是SQL中的一个关键字，用于ORDER BY按升序排列结果（从低到高或AZ）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies ORDER BY imdb_rating ASC;</span></pre></td></tr></table></figure>
+
+<h3 id="查询-LIMIT"><a href="#查询-LIMIT" class="headerlink" title="查询(LIMIT)"></a>查询(LIMIT)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">SELECT * FROM movies ORDER BY imdb_rating DESC LIMIT 3;</span></pre></td></tr></table></figure>
+
+<p>有时甚至过滤的结果可以在大数据库中返回数千行。在这些情况下，重要的是将结果集中的行数加起来。</p>
+<p>LIMIT是一个允许您指定结果集将具有的最大行数的子句。在这里，我们指定结果集不能有三行以上。</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#SQL">SQL</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

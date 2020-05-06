@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>Git添加账号 - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>Git添加账号</h2>
+<p>
+    <i>2017-06-08 11:49</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<h2 id="Git添加账号"><a href="#Git添加账号" class="headerlink" title="Git添加账号"></a>Git添加账号</h2><h3 id="测试SSH是否连接"><a href="#测试SSH是否连接" class="headerlink" title="测试SSH是否连接"></a>测试SSH是否连接</h3><p>打开Terminal</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span></pre></td></tr></table></figure>
+
+<p>以下反馈则表示账号连接成功，可以直接使用。如果是其它的则需要在你的git添加SSH key</p>
+<a id="more"></a>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Hi username! You've successfully authenticated, but GitHub does not</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">provide shell access.</span></pre></td></tr></table></figure>
+
+
+<h3 id="先查看电脑是否存在SSH-key"><a href="#先查看电脑是否存在SSH-key" class="headerlink" title="先查看电脑是否存在SSH key"></a>先查看电脑是否存在SSH key</h3><blockquote>
+<p>有则直接在您的GitHub账号中添加，没有则现在您的电脑中先创建再添加<br>检查电脑中是否存在SSH keys</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ls -al ~/.ssh</span></pre></td></tr></table></figure>
+
+<p>如果存在，则会显示id_dsa.pub、id_dsa等相关显示；不存在则需要先创建SSH keys</p>
+<h3 id="创建SSH-key"><a href="#创建SSH-key" class="headerlink" title="创建SSH key"></a>创建SSH key</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C "your_email@youremail.com" </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">注：your_email@youremail.com 请注意替换您自己的GitHub 账号</span></pre></td></tr></table></figure>
+<p>再根据命令的提示操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Generating public/private rsa key pair. Enter file in which to save thekeys (/Users/your_user_directory/.ssh/id_rsa): //这里需要按下 enter 键就好</span></pre></td></tr></table></figure>
+<p>按下enter之后，又会出现下面的提示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Enter passphrase(empty for no passphrase):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">提示输入一个类似于密码的自定义的通行证号，如果直接回车则为空</span></pre></td></tr></table></figure>
+<p>此时会再出现一个密码的二次确认（请注意设置容易记住的，后面在测试连接时需要用到）</p>
+<blockquote>
+<p>如果再二次确认中忘记了刚刚设置的密码，可以重新再生成一个新的SSH key</p>
+</blockquote>
+<p>之后出现的一大堆提示则说明您的SSH key创建成功</p>
+<h3 id="在你的GitHub中添加SSH-key验证"><a href="#在你的GitHub中添加SSH-key验证" class="headerlink" title="在你的GitHub中添加SSH key验证"></a>在你的GitHub中添加SSH key验证</h3><p>先打开您生成的id_dsa.pub，拷贝SSH值。可以直接找到.ssh文件夹打开拷贝，也可以选择用命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">pbcopy &lt; ~/.ssh/id_rsa.pub</span></pre></td></tr></table></figure>
+<p>再登录你的Github账号，在<strong>Settings－&gt;SSH and GPG keys-&gt;</strong>选项中添加<br>按照提示讲拷贝的SSH添入其中，提交后会有输入密码的确认，之后会有提示。<br>如果提示添加成功，可以测试一下是否可以理解，参照“测试SSH是否与您的账号连接”</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#git">git</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>win10安装VMmare - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>win10安装VMmare</h2>
+<p>
+    <i>2017-10-13 12:47</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<blockquote>
+<p>win10 中安装VMware虚拟机时遇到的问题</p>
+</blockquote>
+<h2 id="Microsoft-Runtime-DLL问题"><a href="#Microsoft-Runtime-DLL问题" class="headerlink" title="Microsoft Runtime DLL问题"></a>Microsoft Runtime DLL问题</h2><p>在安装VMware时出现Microsoft Runtime DLL提示信息，导致无法安装。在寻找解决方案的时候，网上有几种情况：</p>
+<a id="more"></a>
+<pre><code>1、权限原因导致，未能用管理员权限运行／权限不足————提升用户权限，以管理权限运行
+2、电脑缺少依赖工具包————安装所需工具包
+3、系统注册表中出了问题————清理注册表
+4、服务中Windows install 服务相关问题————开启相关服务
+5、其它解决方式——另辟蹊径————实际解决问题方式</code></pre><h3 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h3><p>win10系统中，系统默认的Admin用户是禁止的，需要解禁。步骤如下：</p>
+<p>先进入计算机管理页面</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/10/img00.jpg" alt=""></p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/10/img01.jpg" alt=""></p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/10/img02.jpg" alt=""></p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/10/img03.jpg" alt=""></p>
+<p>注：如果计算机管理页面没有本地用户的选项，则说明系统需要升级。从普通家庭版升级到专业版或者企业版，网上搜索“win10从家庭版升级到专业版”即可</p>
+<p>解决权限问题后，发现并不能解决问题；继续尝试问题2、3、4处理方式：</p>
+<p><a href="https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2078258" target="_blank" rel="noopener">官方论坛信息</a>注册表相关问题</p>
+<p><a href="https://tieba.baidu.com/p/4236344841" target="_blank" rel="noopener">缺少依赖包Visual C++ Redistributable-贴吧的说明</a> 下载地址<a href="https://www.microsoft.com/zh-cn/download/details.aspx?id=48145" target="_blank" rel="noopener">Visual C++ Redistributable</a></p>
+<h3 id="最终解决方案"><a href="#最终解决方案" class="headerlink" title="最终解决方案"></a>最终解决方案</h3><p>在安装VMware出现Microsoft Runtime DLL的问题时不用点击关闭程序，win+R 输入 %temp% 回车。</p>
+<p>然后会出现一个窗口，里面有许多列表，找到一个~setup结尾的文件夹，打开进去，里面会有如下几个文件：</p>
+<pre><code>vcredist_x64
+vcredist_x86
+VMwareWorkstation</code></pre><p>将这三个文件拷贝到桌面或者其它地方，再点VMwareWorkstation即可正常安装。</p>
+<p>安装完成后可能会出现有注册码确无法注册的情况，它提示权限不足，或者不是管理员等提示信息。</p>
+<h2 id="VMmare激活权限问题"><a href="#VMmare激活权限问题" class="headerlink" title="VMmare激活权限问题"></a>VMmare激活权限问题</h2><p>安装VMmare成功后，可能会出现激活的问题，解决方案：</p>
+<p>VMmare右键——程序位置如下图：</p>
+
+
+<p>再进入到x64文件夹下面，复制这个路径：</p>
+<pre><code>C:\Program Files (x86)\VMware\VMware Workstation\x64</code></pre><p>再以管理员权限运行cmd，可在这个目录下找到：</p>
+<pre><code>C:\Windows\System32</code></pre><p>找到cmd.exe右键以管理员身份运行：</p>
+<pre><code>cd C:\Program Files (x86)\VMware\VMware Workstation\x64</code></pre><p>再运行：</p>
+<pre><code>vmware-vmx.exe --new-sn xxxx-xxxx-xxxx-xxxx</code></pre><p>后面的xxxx-xxxx 是指激活码，可购买或自行去寻找</p>
+<p>以上是我安装VMmare遇到的问题，以及解决方案，欢迎交流学习</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#win">win</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

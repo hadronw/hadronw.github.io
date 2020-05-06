@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>Mac下配置VM中Linux-CentOS6.5虚拟机网络静态IP - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>Mac下配置VM中Linux-CentOS6.5虚拟机网络静态IP</h2>
+<p>
+    <i>2017-12-19 11:08</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<blockquote>
+<p>在CentOS中，每次开机其IP都是动态变化的；为了方便的使用shell，故对CentOS虚拟机配置静态IP。本文讲述的是在Mac端的VM虚拟机，Windows下虚拟机配置是一样的，差别在于虚拟机的网络查看、配置不一样</p>
+</blockquote>
+<h2 id="首先查看VM虚拟机可以配置IP的数字范围"><a href="#首先查看VM虚拟机可以配置IP的数字范围" class="headerlink" title="首先查看VM虚拟机可以配置IP的数字范围"></a>首先查看VM虚拟机可以配置IP的数字范围</h2><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;Library&#x2F;Preferences&#x2F;VMware\ Fusion&#x2F;vmnet8&#x2F;dhcpd.conf</span><br></pre></td></tr></table></figure>
+
+<p>滑动到最后，如下图所示</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/c00.jpg" alt=""></p>
+<p>通常静态IP配置的范围为xxx.xxx.xxx.128–xxx.xxx.xxx.254；每次CentOS开机时动态IP变动的范围也是在这区间。</p>
+<h2 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h2><p>首先打开配置文件，必须是root账号才有权限编辑</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-eth0</span><br></pre></td></tr></table></figure>
+
+<p>显示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DEVICE&#x3D;eth0</span><br><span class="line">HWADDR&#x3D;00:0C:29:6F:3E:46</span><br><span class="line">TYPE&#x3D;Ethernet</span><br><span class="line">UUID&#x3D;8cda677d-9ef1-48fd-86c8-3110c26ba046</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">NM_CONTROLLED&#x3D;yes</span><br><span class="line">BOOTPROTO&#x3D;dhcp</span><br></pre></td></tr></table></figure>
+
+<h3 id="首先"><a href="#首先" class="headerlink" title="首先"></a>首先</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BOOTPROTO&#x3D;dhcp  ----&gt; BOOTPROTO&#x3D;static</span><br></pre></td></tr></table></figure>
+
+<h3 id="再将HWADDR的值与虚拟机中网络配置的Mac统一，以虚拟机中网络配置的Mac值为准"><a href="#再将HWADDR的值与虚拟机中网络配置的Mac统一，以虚拟机中网络配置的Mac值为准" class="headerlink" title="再将HWADDR的值与虚拟机中网络配置的Mac统一，以虚拟机中网络配置的Mac值为准"></a>再将HWADDR的值与虚拟机中网络配置的Mac统一，以虚拟机中网络配置的Mac值为准</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HWADDR&#x3D;00:0C:29:6F:3E:46</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/c01.jpg" alt=""></p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/c02.jpg" alt=""></p>
+<h3 id="添加其他配置"><a href="#添加其他配置" class="headerlink" title="添加其他配置"></a>添加其他配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">DEFROUTE&#x3D;yes</span><br><span class="line">PEERDNS&#x3D;yes</span><br><span class="line">PEERROUTES&#x3D;yes</span><br><span class="line">IPV4_FAILURE_FATAL&#x3D;yes</span><br><span class="line">IPV6INIT&#x3D;no</span><br><span class="line">NAME&#x3D;&quot;System eth0&quot;</span><br><span class="line">IPADDR&#x3D;172.16.164.131       ---配置的IP地址</span><br><span class="line">BCAST&#x3D;172.16.164.255        ---广播地址，xx.xx.xx.255前面的数字参照IP前面，</span><br><span class="line">GATEWAY&#x3D;172.16.164.2        ---网关地址为上文查看中的数值</span><br><span class="line">NETMASK&#x3D;255.255.255.0       ---子网掩码</span><br><span class="line"></span><br><span class="line">DNS1&#x3D;172.16.164.2           ---同上</span><br><span class="line">DNS2&#x3D;8.8.8.8</span><br></pre></td></tr></table></figure>
+
+
+<p>至此静态网络IP设置完毕</p>
+<h2 id="重启网络服务并检验"><a href="#重启网络服务并检验" class="headerlink" title="重启网络服务并检验"></a>重启网络服务并检验</h2><h3 id="重启网络服务"><a href="#重启网络服务" class="headerlink" title="重启网络服务"></a>重启网络服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;etc&#x2F;init.d&#x2F;network restart</span><br><span class="line">或</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+<p>查看输出信息，全部为OK则重启成功</p>
+<p>注：DEVICE=eth0的值为唯一，有冲突时可设为eth1，eth2……依次上推</p>
+<h3 id="检验网络"><a href="#检验网络" class="headerlink" title="检验网络"></a>检验网络</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">一、</span><br><span class="line"></span><br><span class="line">curl www.baidu.com</span><br><span class="line"></span><br><span class="line">二、</span><br><span class="line"></span><br><span class="line">电脑中ping虚拟机的IP，信息联通则表示成功；或者互相ping ip</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置hostname便于在shell中区分多台Linux机器"><a href="#设置hostname便于在shell中区分多台Linux机器" class="headerlink" title="设置hostname便于在shell中区分多台Linux机器"></a>设置hostname便于在shell中区分多台Linux机器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# hostname   ---查看</span><br><span class="line">master</span><br><span class="line">[root@master ~]# hostname xxx ---设置</span><br><span class="line">[root@master ~]# hostname</span><br><span class="line">xxx</span><br><span class="line"></span><br><span class="line">以上只是临时设置，如若需要永久生效需：</span><br><span class="line">[root@master ~]# vi &#x2F;etc&#x2F;sysconfig&#x2F;network</span><br><span class="line"></span><br><span class="line">修改其中的HOSTNAME&#x3D;xxx  如将master改为test。保存退出</span><br><span class="line">再重新加载生效</span><br><span class="line">[root@master ~]# hostname test</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="IP地址与主机名的映射"><a href="#IP地址与主机名的映射" class="headerlink" title="IP地址与主机名的映射"></a>IP地址与主机名的映射</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# vi &#x2F;etc&#x2F;hosts</span><br><span class="line"></span><br><span class="line">xxx.xxx.xxx.xxx  master ---master与上文中查看的hostname相统一</span><br></pre></td></tr></table></figure>
+
+<p>如图：</p>
+<p><img src="https://hadronw.xyz/blogImgs/2017/12/c03.jpg" alt=""></p>
+<p>编辑，保存后，再重启检查ifconfig，如果IP地址跟设置的一样，则表明设置成功。</p>
+<p>注：VM中一个Linux虚拟机创建成功后，还需要多个同样类型的虚拟机。</p>
+<p>先将虚拟机关机，然后再选择虚拟机创建完整克隆。创建成功后多个同样配置的虚拟机便创建成功。比起重新安装要迅速许多。</p>
+<p>需要注意的是，克隆的虚拟机中网络配置的数值可能会一样【比如：DEFROUTE、HWADDR】。</p>
+<p>DEFROUTE的值可以自行设置，HWADDR需要的MAC值可再虚拟机关闭的时候，选择虚拟机设置——网络适配器——高级选项 MAC旁有一个生成，可重新生成新的MAC值；生成之后再将数值填入到HWADDR即可。</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#Linux">Linux</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>

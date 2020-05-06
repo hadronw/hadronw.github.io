@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+<meta name="keywords" content="Hexo,  Lua,  Openresty, hadronw's blog" />
+
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+  <meta name="google-site-verification" content="cXrmNsZjDqC3drL1XY6-CZURO2H7s8X-njVT3_EFO8s" />
+
+
+
+  <meta name="msvalidate.01" content="JxVosc0Pyv" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=">
+
+
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=" >
+
+
+  <link rel="manifest" href="/favicon/manifest.json">
+
+
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+
+
+<title>一个小错误引发的7天折腾 - hadronw's blog</title>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+<div class="body-wrapper">
+<div class="nav-header">
+    <a href="/">hadronw's blog</a>
+    
+    
+    
+     | <a href="/about">About </a>
+</div>
+<div class="main-body">
+
+<header>
+<h2>一个小错误引发的7天折腾</h2>
+<p>
+    <i>2019-12-16 13:19</i>
+    
+    
+    
+</p>
+</header>
+<article>
+<p>是不是发现我好几天没更新了，因为这几天电脑系统被我给整崩了，到现在才整好。这不，电脑一恢复好，就马上更新了。下文是对这一事件的反省，可以好好看看，希望看到文章的朋友不要范类似的错误。</p>
+<p><strong>事件起因、经过：</strong><br>现在手头用的电脑是 MacBook 15年款的，到现在也有 4 年多了。除了之前电脑出借一段时间，很长一段时间都是自己使用，可以说也保养的很好。看到有新版本的系统就想试着使用，不论是手机还是电脑，都是这样。只要发现相关软件、系统有新版本，就会迫不及待的去升级。</p>
+<blockquote>
+<p>这里也提醒一下，如果手头有多余的设备，可以去追求最新版本。如果只有一个同类设备，该设备还作为日常使用的唯一工具，那千万不要随意尝试最新版系统。即便是要尝试，也得做好备份，否则会特别的麻烦。</p>
+</blockquote>
+<p>前段时间发现 Mac 出现了一个最新版本的系统<code>macOS Catalina 10.15</code>，于是手痒的更新了。使用一段时间后，发现<strong>网络不是很稳定</strong>，莫名的断网。检查路由器等其他设备，发现网络是正常的。开始怀疑是系统的稳定性，于是决定给电脑降版本。</p>
+<blockquote>
+<p>我的这个想法是没有错的，前期的步骤也做的很对，但在最关键的地方却<strong>怀疑了自己</strong>，这一疏忽就是后续折腾的最大根源。</p>
+</blockquote>
+<p><strong>正确的系统更换步骤:</strong></p>
+<p>1、做好系统重要文件的备份<br>2、确认备份是否有遗漏<br>3、进行系统更换<br>4、更换过程中如果遇到了问题，千万不要损坏备份盘</p>
+<p>不论你用的是什么系统，步骤都是如此。这样才能保证最高效率的更换系统，又不影响后续的使用。</p>
+<p>通常来说，系统升级是不会有软件方面的限制；如果是硬件过时，才会出现不支持的情况，毕竟厂商是鼓励用户使用最新版系统的。如果是进行系统降级，则<strong>需要注意了</strong>，不少厂商可能会对设备进行了相关设置，给你降级系统添点麻烦，苹果就是这样的。</p>
+<p>当我把电脑备份好之后，准备重新安装老版本的系统时 10.13 时，安装过程中出现了一个错误提示:<code>软件包错误，或已损坏</code>。看到这一错误时，首先并不是怀疑厂商的做的调整，而是怀疑自己的系统安装盘是不是出错误了。</p>
+<p>于是傻不拉几的用手机找 10.13 的系统安装盘，准备重新制作 U 盘安装工具，毕竟怀疑自己之前制作的启动盘坏了。于是开始找系统，制作启动盘的过程。</p>
+<p>只是没有想到，这一个自我怀疑的过程就花费了好几天的晚上。在这个过程中最费时间的是系统的下载源不好找，另一个就是下载网速的限制，以及<code>macOS</code> 使用硬盘格式跟<code>Windows</code> 硬盘格式不兼容的问题。</p>
+<p>一个 MacOS 的系统安装盘至少 4GB 大小，在 MacOS 中下载下载也很方便，直接在 AppStore 中查找下载就行，下载速度也很快，通常二三十分钟就能下载完。如果是在 Windows 中，其中的问题就得放大好几倍了。</p>
+<p>在<code>Windows</code>环境中制作<code>macOS</code>的 U盘启动，是不能使用苹果官方的系统镜像包的，需要使用含有引导功能的系统镜像包。第一次找的是原版系统(不含引导功能)，启动盘刻录后发现无法使用，又得重来。</p>
+<p>在刻录启动盘的过程中，又犯了一个错误。之前备份用的硬盘进行了分盘，之前的启动盘也是在上面做的，这次又拿过去重新刻录。但是<code>Windows</code>中刻录启动盘的软件<code>TransMac</code>、<code>Etcher</code>在制作过程中它只能识别整个硬盘，无法识别分盘的。导致，备份盘被销毁了，备份的数据全没了。</p>
+<p>更加让人后悔莫及的就是，在查找相关解决方案的过程中，看到一个关于<code>macOS</code>降级过程出现<code>软件包错误，或已损坏</code>问题的一个解决方案。出现这个问题导致系统无法安装，不是启动盘的问题，而是<strong>苹果做了系统降级限制</strong>，只要对电脑进行断网处理，再更改电脑的时间，就可以继续安装了。完全不需要重新制作启动盘，也完全不需要删除备份好的硬盘。</p>
+<p>看到这一答案，才发现自己这些天的时间都白花了!!!</p>
+<p>要是在出现这一问题时候，就直接去网上找答案，还会有后续的事情吗？不会! 系统早就换好了。要是重新找一个u盘，而不是直接使用备份的硬盘去做启动盘，后续花费的时间也不会那么多。</p>
+<p>这一事件给了我一个很深的教训：<strong>遇到没见过的错误时，不要忙着怀疑自己，一定要先去弄清楚这个错误是什么？</strong>弄清出之后再想办法去解决，在不清楚之前，不要着急怀疑自己，也不要着急用之前的经验去解决。涉及到备份的东西，能不动就千万不要破坏，否则后悔莫及。</p>
+<p>以上就是个人的一个犯错总结，可能发生的事件是不同的，但造成事件的原因还是有很多共性，希望以后能避免类似的错误。</p>
+<p>最后再介绍一点关于<code>macOS</code>的小知识，从<code>macOS High Sierra 10.13</code>开始，苹果的文件系统格式就更改了统一使用<code>APFS</code>，之前的格式就不使用了。所以使用移动硬盘，或者安装系统的时候需要留意一下。</p>
+<p><code>macOS Mojave 10.14</code> 这个版本的系统有一个很大的升级，2012 之前的很多都不支持<code>Metal API显卡</code>都机器都无法安装该系统。从这一版本系统开始，macOS以及支持了<code>深色模式</code>，很多软件都能使用黑色背景的，这个功能对长时间使用电脑的人来说，是一件很舒服的事情，至少看屏幕不会有那么的累了（如果你的机器硬件支持的话，可以考虑升级到这个版本的系统，10.14.6）。</p>
+<p>至于最新版的<code>macOS Catalina 10.15</code>不建议尝试更新，如果想拿iPad做拓展桌面（第二屏幕）可以尝试一下更新，再尝试更新之前，建议查找一下看看自己的电脑是否支持<code>随航（Sidecar）</code>功能。比如，我的电脑硬件就不支持这一功能。</p>
+
+</article>
+<div id="info-bottom">
+<hr>
+<p>标签: <block class="izhengfan-tag"><a href="/archives#公众号">公众号</a></block></p>
+
+    
+        <div class="comments" id="comments">
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+                    <script>
+                        new Valine({
+                            av: AV,
+                            el: '.comments',
+                            notify: false, 
+                            verify: false,
+                            app_id: 'tA9fnMOATdYuVDUSkPsbGBfi-gzGzoHsz',
+                            app_key: '07ptzyueBmWB16ShNJuwsUnm',
+                            placeholder: '谈谈你的看法？',
+                            visitor: true
+                        });
+                    </script>
+            
+        </div>
+    
+
+
+</div>
+
+</div>
+
+<div class="info-bottom"><div class="info-bottom-text">
+<div itemprop="license">
+
+
+License<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">(CC)BY-NC-SA</a>
+
+
+ 
+&copy;  2017 &mdash; <span itemprop="copyrightYear">2020</span>
+
+<span class="author" itemprop="copyrightHolder">hadronw</span>
+
+  | Theme based on <a target="_blank" href="https://fzheng.me/">fzheng.me</a>
+
+
+</div><!-- license -->
+</div></div>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113179601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113179601-1');
+</script>
+
+
+<script src="https://use.typekit.net/hvv6ahj.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+
+
+
+</html>
